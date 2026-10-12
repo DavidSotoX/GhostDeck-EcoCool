@@ -1,0 +1,114 @@
+name: Model support request
+description: Help add support for your MSI laptop model
+title: "[Model] <your model> (<EC firmware>)"
+labels: ["model-support"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping extend **GhostDeck** to more models!
+
+        The app only enables profile switching on **known-good EC firmwares**. To add yours,
+        we need a few EC dumps. Everything requested below is **read-only** — no writes to your EC.
+
+        **Easiest path:** in the app, open the tray menu → **Report my model…** (or the button in the
+        Status window). It captures everything below and pre-fills this form for you — paste the full
+        report (Ctrl+V) into the "Full EC dump" field and submit. The manual steps below are the fallback.
+
+  - type: input
+    id: model
+    attributes:
+      label: Laptop model
+      description: Exact model, e.g. "MSI Raider GE78HX 13VH" (sticker on the bottom, or MSI Center).
+      placeholder: MSI ...
+    validations:
+      required: true
+
+  - type: input
+    id: actual-model
+    attributes:
+      label: Actual model (if different)
+      description: The app pre-fills the model it DETECTED. MSI ships some boards in more than one model, so if your laptop's real name differs from the field above, write it here (issue #80 is such a case).
+      placeholder: e.g. MSI Katana A15 AI B8VG
+    validations:
+      required: false
+
+  - type: input
+    id: firmware
+    attributes:
+      label: EC firmware
+      description: From the app → **Status** window → "EC firmware" (e.g. 17S1IMS1.114).
+      placeholder: 17S1IMS1.xxx
+    validations:
+      required: true
+
+  - type: input
+    id: msicenter
+    attributes:
+      label: MSI Center version
+      description: |
+        MSI Center → Settings (gear) → About, e.g. "2.0.52". Newer versions rename or hide some
+        scenarios, which changes what a capture shows — the version tells us how to read your dumps.
+        Write "not installed" if you don't have it.
+      placeholder: "2.0.xx / not installed"
+    validations:
+      required: true
+
+  - type: textarea
+    id: snapshot
+    attributes:
+      label: EC snapshot per scenario
+      description: |
+        1. Get the script: download the repo (green **Code → Download ZIP**) or just the file `scripts/diagnostics/msi_ec_snapshot.ps1`.
+        2. Open **PowerShell as Administrator** in that folder.
+        3. Run: `pwsh -ExecutionPolicy Bypass -File msi_ec_snapshot.ps1` (use `powershell` instead of `pwsh` if needed).
+        4. At each prompt, set the MSI Center scenario (Silent / Balanced / Extreme / Super Battery) and press Enter.
+        5. Paste the result here (it is also saved as `msi_ec_snapshot_results.txt`).
+
+        If your MSI Center has only 3 scenarios (no classic Silent), capture what it offers and mention it.
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: fulldump
+    attributes:
+      label: Full EC dump per scenario (optional, very helpful)
+      description: |
+        **If you used the app's Report button**, the full report is already on your clipboard (and saved
+        to a .txt on your Desktop) — just click this empty field and paste it with Ctrl+V.
+
+        Manual alternative: run `scripts/diagnostics/msi_ec_fulldump.ps1`. It dumps all 256 EC bytes per
+        scenario, which lets us find the exact registers for your model. Paste or attach
+        `msi_ec_fulldump_results.txt`. **This is the most useful file** — please include it if you can.
+      render: text
+
+  - type: checkboxes
+    id: verified
+    attributes:
+      label: Hardware verification (optional — lets us mark your model "Tested" right away)
+      description: |
+        **Only tick these if the app already recognises your model** (Status shows a profile, not
+        "read-only / unsupported") **and you personally switched profiles in the app and watched what
+        happened.** This is the whole difference between *Experimental* and *Tested* — if you confirm it
+        here, we don't have to ask again after you submit.
+
+        Not recognised yet? Leave every box below unchecked and just send the dumps — we'll build a
+        recipe from them, you update the app, and then you can come back and confirm.
+
+        What to check (Silent vs Balanced is the important one — that low-power cap is the reason this
+        project exists):
+      options:
+        - label: "**Silent** noticeably lowers CPU package power and/or fan noise vs **Balanced** (seen in HWiNFO64, or clearly quieter/cooler by ear)."
+        - label: "**Extreme** unlocks full power / the fans ramp up as expected."
+        - label: "Switching profiles in the app is stable — no crash, black screen, or stuck fans, and the app's profile matches what I selected."
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmation
+      options:
+        - label: I understand this is experimental and EC writes are at my own risk.
+          required: true
+        - label: I'm willing to test a proposed recipe on my machine and report back.
+          required: true

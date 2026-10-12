@@ -1,0 +1,25 @@
+# Generated outputs
+bin/
+obj/
+dist/
+publish/
+release/
+release-updtest/
+out/
+*.log
+*.zip
+*.exe
+*.dll
+# IDE / machine local
+.vs/
+.idea/
+*.user
+*.suo
+__pycache__/
+*.pyc
+*.tmp
+*.bak
+# Local diagnostics and evidence
+reports/*
+!reports/.gitkeep
+*.diagnostic.json

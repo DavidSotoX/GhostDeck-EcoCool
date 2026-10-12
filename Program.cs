@@ -1,0 +1,30 @@
+using System.Threading;
+
+namespace GhostDeck;
+
+internal static class Program
+{
+    [STAThread]
+    private static int Main(string[] args)
+    {
+        // Signed model-database override (ModelDb): a downloaded, verified, NEWER database
+        // replaces the compiled tables for this run - for the tray app and the CLI alike.
+        if (SafetyEdition.RemoteModelDbEnabled && ModelDb.LoadOverride() is { } db) Devices.ApplyOverride(db);
+
+        // Any argument = CLI mode: forwarded to the running instance over the pipe, or executed
+        // one-shot against the EC. The tray app itself never starts with arguments.
+        if (args.Length > 0) return Cli.Run(args);
+
+        using var showSignal = new EventWaitHandle(false, EventResetMode.AutoReset, "GhostDeckEcoCool_ShowMainWindow");
+        using var mtx = new Mutex(true, "GhostDeckEcoCool_SingleInstance", out bool createdNew);
+        if (!createdNew) { showSignal.Set(); return 0; }   // already running - ask it to show its window
+
+        Updater.CleanupAfterUpdate();   // drop leftover GhostDeck.update.exe / .bak from a previous update
+        AppLifecycle.Install();         // shutdown flag + no WinForms crash dialog, ever
+        Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+        Application.Run(new TrayContext());
+        return 0;
+    }
+}

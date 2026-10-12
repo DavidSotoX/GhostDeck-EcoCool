@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <NuGetAudit>true</NuGetAudit>
+    <NuGetAuditMode>all</NuGetAuditMode>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <!-- Core/GpuLoad.cs calls Direct3D through raw vtable pointers; nothing else needs this -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <AssemblyName>GhostDeckEcoCool</AssemblyName>
+    <RootNamespace>GhostDeck</RootNamespace>
+    <Product>GhostDeck EcoCool Focus</Product>
+    <Version>1.39.2</Version>
+    <Company>WYGODA DAWID FENIX INSPIRE</Company>
+    <Copyright>Copyright (C) 2026 Dawid Wygoda</Copyright>
+    <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Tests/**/*.cs" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- multi-size ghost icon reachable at runtime (window/taskbar); ApplicationIcon only brands the exe file -->
+    <EmbeddedResource Include="app.ico" LogicalName="GhostDeck.app.ico" />
+  </ItemGroup>
+
+</Project>

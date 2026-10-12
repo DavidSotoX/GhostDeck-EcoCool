@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="ControllerChecks.cs" />
+    <Compile Include="obj/generated/SettingsState.cs" />
+    <Compile Include="../Core/EcoCoolController.cs" Link="EcoCoolController.cs" />
+    <Compile Include="TestDoubles.cs" />
+    <Compile Include="../Core/EcTransaction.cs" Link="EcTransaction.cs" />
+    <Compile Include="../Core/EcProfileState.cs" Link="EcProfileState.cs" />
+    <Compile Include="../Core/FanCurveSafety.cs" Link="FanCurveSafety.cs" />
+    <Compile Include="../Core/FanSweep.cs" Link="FanSweep.cs" />
+    <Compile Include="../Core/SafeFile.cs" Link="SafeFile.cs" />
+  </ItemGroup>
+  <Target Name="PrepareControllerFixture" BeforeTargets="BeforeCompile">
+    <Exec Command="python &quot;$(MSBuildProjectDirectory)/../tools/prepare-controller-harness.py&quot;" />
+  </Target>
+</Project>

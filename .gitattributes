@@ -1,2 +1,8 @@
-# Auto detect text files and perform LF normalization
+# Normalizuj konce linii; binaria oznacz wprost
 * text=auto
+*.ico binary
+*.png binary
+# Podpisana baza modeli: podpis liczony z DOKLADNYCH bajtow pliku, a raw.githubusercontent
+# serwuje blob - zadnej normalizacji konca linii (patrz ModelDb.cs / TECHNICAL).
+data/models.json -text
+data/models.json.sig -text
